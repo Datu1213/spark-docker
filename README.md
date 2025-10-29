@@ -1,7 +1,7 @@
 # spark-docker
-Esay-to-use spark-docker(Spark 3.5.7), better deployed using docker-compose.yaml, good practices for local development, testing and learning.
+Esay-to-use spark-docker(Spark 3.5.7), better deployed using docker-compose.yaml, good practices for **local development**, **testing** and **learning**.
 
-I made this cause bitnami is no longer provide free docker image on docker hub.
+I made this cause bitnami **no longer** provides free Spark docker image on docker hub.
 
 **Three** modes provided:
 - master
@@ -44,41 +44,48 @@ spark-master:
       - "7077:7077"
       - "8080:8080"
     volumes:
-      - ./config/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
-
-      spark-worker:
-    build:
-      context: ./docker/spark-docker/3.5.7
-    depends_on:
-      - spark-master
-    environment:
-      SPARK_MODE: worker
-      # Set SPARK_MASTER_URL if you have customized url.
-      SPARK_MASTER_URL: spark://spark-master:7077
-      SPARK_WORKER_CORES: 4
-      SPARK_WORKER_MEMORY: 8g
-      SPARK_WORKER_WEBUI_PORT: 8082
-    ports:
-      # Should be as same as env $SPARK_WORKER_WEBUI_PORT
-      - "8082:8082"
-    volumes:
-      - ./ivy2:/opt/spark/.ivy2
-      - ./spark-data:/opt/spark/data
-      # Defaul offical Apache Spark work-dir is /opt/spark/work-dir
-      - ./spark-warehouse:/opt/spark/work-dir/warehouse
-      - ./metastore_db:/opt/spark/work-dir/metastore_db
       - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
 
-      spark-thrift:
-    build:
-      context: ./docker/spark-docker/3.5.7
-    depends_on:
-      - spark-master
-      - spark-worker
-    environment:
-      SPARK_MODE: thrift
-      SPARK_MASTER_URL: spark://spark-master:7077
-    volumes:
-      - ./ivy2:/opt/spark/.ivy2
-      - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
+spark-worker:
+  build:
+    context: ./docker/spark-docker/3.5.7
+  depends_on:
+    - spark-master
+  environment:
+    SPARK_MODE: worker
+    # Set SPARK_MASTER_URL if you have customized url.
+    SPARK_MASTER_URL: spark://spark-master:7077
+    SPARK_WORKER_CORES: 4
+    SPARK_WORKER_MEMORY: 8g
+    SPARK_WORKER_WEBUI_PORT: 8082
+  ports:
+    # Should be as same as env $SPARK_WORKER_WEBUI_PORT
+    - "8082:8082"
+  volumes:
+    - ./ivy2:/opt/spark/.ivy2
+    - ./spark-data:/opt/spark/data
+    # Defaul offical Apache Spark work-dir is /opt/spark/work-dir
+    - ./spark-warehouse:/opt/spark/work-dir/warehouse
+    - ./metastore_db:/opt/spark/work-dir/metastore_db
+    - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
 
+spark-thrift:
+  build:
+    context: ./docker/spark-docker/3.5.7
+  depends_on:
+    - spark-master
+    - spark-worker
+  environment:
+    SPARK_MODE: thrift
+    SPARK_MASTER_URL: spark://spark-master:7077
+  volumes:
+    - ./ivy2:/opt/spark/.ivy2
+    - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
+```
+
+### spark-defaults.conf
+An spark-defaults.conf file s provided for kafka, dbt, and delta lake.
+
+### More
+
+It is recommended to use an indepentend jupyter-pyspark server or dbt server.

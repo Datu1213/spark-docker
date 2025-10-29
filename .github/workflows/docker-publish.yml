@@ -9,7 +9,7 @@ on:
   push:
     branches: [ "main" ]
     # Publish semver tags as releases.
-    tags: [ 'v1.0.0' ]
+    tags: [ '3.5.7' ]
   pull_request:
     branches: [ "main" ]
 
@@ -73,7 +73,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: .
+          context: ./3.5.7
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

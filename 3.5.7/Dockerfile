@@ -61,13 +61,19 @@ ENV SPARK_HOME=/opt/spark \
     # Directory for Spark configuration files
     # Better to mount a volume or bind a host dir to it
     SPARK_CONF_DIR=/opt/spark/conf \
-    # SPARK_MODE = [ master | worker | thrift | driver | executor ]
+    # SPARK_MODE = [ master | worker | thrift ]
     SPARK_MODE=master \
     # Spark master URL, needed by workers and clients
     # Default: spark://spark-master:7077
-    SPARK_MASTER=spark://spark-master:7077 \
+    SPARK_MASTER_URL=spark://spark-master:7077 \
+    SPARK_MASTER_PORT=7077 \
+    SPARK_MASTER_WEBUI_PORT=8080 \
+    SPARK_MASTER_HOST=spark-master \
+    SPARK_WORKER_WEBUI_PORT=8081 \
     SPARK_WORKER_CORES=2 \
-    SPARK_WORKER_MEMORY=2g
+    SPARK_WORKER_MEMORY=2g \
+    HIVE2_THRIFT_PORT=10000 \
+    HIVE2_THRIFT_DOAS_ENABLE=false
 
 WORKDIR /opt/spark/work-dir
 

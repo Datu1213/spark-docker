@@ -117,3 +117,38 @@ case "$1" in
     exec "$@"
     ;;
 esac
+
+# Below is legacy entrypoint code for spark master and test modes.
+# It will not be executed when using the above case statement for k8s mode.
+echo "Spark runs in $SPARK_MODE mode."
+ehco "Spark Master URL: $SPARK_MASTER_URL"
+echo "Spark user: spark"
+if [ "$SPARK_MODE" = "master" ]; then
+    # Launch Spark Master
+    echo "Launching Spark Master..."
+    /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master \
+    --host $SPARK_MASTER_HOST \
+    --port $SPARK_MASTER_PORT \
+    --webui-port $SPARK_MASTER_WEBUI_PORT \
+    --properties-file $SPARK_CONF_DIR/spark-defaults.conf
+elif [ "$SPARK_MODE" = "worker" ]; then
+    echo "Launching Spark Test Mode..."
+    /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker \
+      --cores $SPARK_WORKER_CORES \
+      --memory $SPARK_WORKER_MEMORY \
+      --webui-port $SPARK_WORKER_WEBUI_PORT \
+      --properties-file $SPARK_CONF_DIR/spark-defaults.conf \
+      $SPARK_MASTER_URL
+else
+    /opt/spark/bin/spark-submit \
+    --class \
+    org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 \
+    --master \
+    $SPARK_MASTER_URL \
+    --hiveconf \
+    hive.server2.thrift.bind.host=0.0.0.0 \
+    --hiveconf \
+    hive.server2.thrift.port=$HIVE2_THRIFT_PORT \
+    --hiveconf \
+    hive.server2.enable.doAs=$HIVE2_THRIFT_DOAS_ENABLE
+fi

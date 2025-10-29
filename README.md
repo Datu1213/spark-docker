@@ -32,12 +32,17 @@ I made this cause bitnami **no longer** provides free Spark docker image on dock
 |**`SPARK_IVY_DIR`**|Ivy packages cache, used to add customized jars into `SPARK_PATH`, better be mounted to a volume.|**`/opt/spark/.ivy2`**|
 |**`SPARK_USER`**|	Spark user.| **`spark`**|
 
-## Usage
+# Usage
+
+### docker
+```bash
+docker pull ghcr.io/datu1213/spark-docker:3.5.7
+```
+
 ### docker-compose.yaml example
 ```yaml
 spark-master:
-    build:
-      context: ./docker/spark-docker/3.5.7
+    image: ghcr.io/datu1213/spark-docker:3.5.7
     environment:
       SPARK_MODE: master
     ports:
@@ -47,8 +52,7 @@ spark-master:
       - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
 
 spark-worker:
-  build:
-    context: ./docker/spark-docker/3.5.7
+  image: ghcr.io/datu1213/spark-docker:3.5.7
   depends_on:
     - spark-master
   environment:
@@ -70,8 +74,7 @@ spark-worker:
     - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
 
 spark-thrift:
-  build:
-    context: ./docker/spark-docker/3.5.7
+  image: ghcr.io/datu1213/spark-docker:3.5.7
   depends_on:
     - spark-master
     - spark-worker

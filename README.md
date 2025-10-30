@@ -8,6 +8,9 @@ I made this cause bitnami **no longer** provides free Spark docker image on dock
 - worker
 - thrift(Specially for kafka, dbt and Delta Lake)
 
+# Reminder
+- Use `user: "${UID}:${GID}"` in `docker-compose.yml` to avoid permission problem.
+
 # Environment variables
 ## environment variables
 ### Customizable environment variables
